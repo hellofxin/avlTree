@@ -113,7 +113,7 @@ void avlTree_rotateWithLeftChild(AvlNode** ppHead){
 	newHead->right = (*ppHead);
 	(*ppHead)->mHeight = 1 + avlTree_max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
 	newHead->mHeight = 1 + avlTree_max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
-	ppHead = &newHead;
+	*ppHead = newHead;
 }
 
 void avlTree_rotateWithRightChild(AvlNode** ppHead){
@@ -121,12 +121,12 @@ void avlTree_rotateWithRightChild(AvlNode** ppHead){
 		return;
 	}
 	AvlNode* newHead = (*ppHead)->right;
-	(*ppHead)->right = newHead->right;
-	newHead->right = (*ppHead);
+	(*ppHead)->right = newHead->left;
+	newHead->left = (*ppHead);
 	// update mHeight here.
 	(*ppHead)->mHeight = 1 + avlTree_max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
 	newHead->mHeight = 1 + avlTree_max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
-	ppHead = &newHead;
+	*ppHead = newHead;
 }
 
 void avlTree_doubleRotateWithLeftChild(AvlNode** ppHead){
@@ -166,7 +166,7 @@ void avlTree_printInOrder(AvlNode* head){
 		return;
 	}
 	avlTree_printInOrder( head->left );
-	printf("%d", head->mData);
+	printf("%d->", head->mData);
 	avlTree_printInOrder( head->right );
 }
 
