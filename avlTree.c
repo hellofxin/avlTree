@@ -5,23 +5,26 @@
 static const unsigned char allowedImbalance = 1;
 
 void avlTree_insertData(AvlNode** ppHead, unsigned int data, unsigned char* pError){
-	if( !(*ppHead) ){
-		*pError++;
+	if( !(ppHead) ){
+		(*pError)++;
 		return;
 	}
 	AvlNode* pNode = (AvlNode*)malloc( sizeof(AvlNode) );
 	if( !pNode ){
-		*pError++;
+		(*pError)++;
 		return;
 	}
 	pNode->mData = data;
+	pNode->left = null;
+	pNode->right = null;
+	pNode->mHeight = 0;
 	avlTree_insert(ppHead, pNode, pError);
 }
 
 
 void avlTree_insert(AvlNode** ppHead, AvlNode* dataNode, unsigned char* pError){
 	if( !dataNode || !ppHead ){
-		*pError++;
+		(*pError)++;
 		return;
 	}
 	if( !(*ppHead) ){
@@ -41,7 +44,7 @@ void avlTree_insert(AvlNode** ppHead, AvlNode* dataNode, unsigned char* pError){
 
 void avlTree_remove(AvlNode** ppHead, AvlNode* dataNode, unsigned char* pError){
 	if( !(*ppHead) || !dataNode ){
-		*pError++;
+		(*pError)++;
 		return;
 	}
 	if( dataNode->mData < (*ppHead)->mData ){
@@ -80,7 +83,7 @@ char avlTree_height(AvlNode* head){
 
 void avlTree_balance(AvlNode** ppHead, unsigned char* pError){
 	if( !ppHead || !(*ppHead) ){
-		*pError++;
+		(*pError)++;
 	}
 	if( avlTree_height((*ppHead)->left) - avlTree_height((*ppHead)->right) > allowedImbalance ){
 		if( avlTree_height((*ppHead)->left->left) >= avlTree_height((*ppHead)->left->right) ){
@@ -98,7 +101,7 @@ void avlTree_balance(AvlNode** ppHead, unsigned char* pError){
 			avlTree_doubleRotateWithRightChild( ppHead );
 		}
 	}
-	(*ppHead)->mHeight = max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) ) + 1;
+	(*ppHead)->mHeight = avlTree_max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) ) + 1;
 }
 
 void avlTree_rotateWithLeftChild(AvlNode** ppHead){
@@ -108,8 +111,8 @@ void avlTree_rotateWithLeftChild(AvlNode** ppHead){
 	AvlNode* newHead = (*ppHead)->left;
 	(*ppHead)->left = newHead->right;
 	newHead->right = (*ppHead);
-	(*ppHead)->mHeight = 1 + max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
-	newHead->mHeight = 1 + max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
+	(*ppHead)->mHeight = 1 + avlTree_max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
+	newHead->mHeight = 1 + avlTree_max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
 	ppHead = &newHead;
 }
 
@@ -121,8 +124,8 @@ void avlTree_rotateWithRightChild(AvlNode** ppHead){
 	(*ppHead)->right = newHead->right;
 	newHead->right = (*ppHead);
 	// update mHeight here.
-	(*ppHead)->mHeight = 1 + max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
-	newHead->mHeight = 1 + max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
+	(*ppHead)->mHeight = 1 + avlTree_max( avlTree_height((*ppHead)->left), avlTree_height((*ppHead)->right) );
+	newHead->mHeight = 1 + avlTree_max( avlTree_height(newHead->left), avlTree_height(newHead->right) );
 	ppHead = &newHead;
 }
 
@@ -185,6 +188,10 @@ void avlTree_printPostOrder(AvlNode* head){
 	printf("%d", head->mData);
 }
 
-char max(char x, char y){
-	return x>=y? x:y;
+char avlTree_max(char x, char y) {
+	if (x >= y) {
+		return x;
+	}
+	return y;
 }
+

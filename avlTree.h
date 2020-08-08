@@ -38,6 +38,6 @@ AvlNode* avlTree_findMax(AvlNode* Head);
 void avlTree_printInOrder(AvlNode* head);
 void avlTree_printPreOrder(AvlNode* head);
 void avlTree_printPostOrder(AvlNode* head);
-char max(char x, char y);
+char avlTree_max(char x, char y);
 
 #endif
